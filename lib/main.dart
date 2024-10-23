@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'theme/theme.dart';
 import 'theme/util.dart';
 import './pages/LoginPage/login_page.dart';
+import './pages/RegisterPage/register_page_widget.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     final textTheme = createTextTheme(context, 'ABeeZee', 'Abel');
@@ -18,8 +20,11 @@ class MyApp extends StatelessWidget {
       title: 'Your App Name',
       theme: materialTheme.light(),
       darkTheme: materialTheme.dark(),
-      themeMode: ThemeMode.system, // Or ThemeMode.light or ThemeMode.dark
-      home: LoginPageWidget(),
+      themeMode: ThemeMode.system,
+      routes: {
+        '/': (context) => const LoginPageWidget(),
+        '/register': (context) => const RegisterPageWidget(),
+      },
     );
   }
 }

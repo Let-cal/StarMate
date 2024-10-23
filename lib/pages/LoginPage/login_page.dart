@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-
+import 'package:flutter/gestures.dart';
 import 'login_page_model.dart';
 
 class LoginPageWidget extends StatefulWidget {
@@ -144,9 +144,9 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
               const SizedBox(height: 16),
               _buildSignInButton(context),
               const SizedBox(height: 24),
-              _buildDivider(),
+              // _buildDivider(),
               const SizedBox(height: 24),
-              Center(child: _buildGoogleSignInButton(context)),
+              // Center(child: _buildGoogleSignInButton(context)),
               const SizedBox(height: 12),
               _buildSignUpText(context),
             ],
@@ -227,7 +227,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
         ),
         child: Text(
           'Sign In',
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontFamily: 'ABeeZee',
                 color: Theme.of(context).colorScheme.onPrimary,
                 fontSize: 16,
@@ -238,70 +238,76 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
     );
   }
 
-  Widget _buildDivider() {
-    return Row(
+  // Widget _buildDivider() {
+  //   return Row(
+  //     children: [
+  //       Expanded(child: Divider()),
+  //       Padding(
+  //         padding: const EdgeInsets.symmetric(horizontal: 16),
+  //         child: Text(
+  //           'Or sign in with',
+  //           style: Theme.of(context).textTheme.labelLarge?.copyWith(
+  //                 color:
+  //                     Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+  //                 fontSize: 16,
+  //                 fontWeight: FontWeight.w500,
+  //               ),
+  //         ),
+  //       ),
+  //       Expanded(child: Divider()),
+  //     ],
+  //   );
+  // }
+
+  // Widget _buildGoogleSignInButton(BuildContext context) {
+  //   return ElevatedButton.icon(
+  //     onPressed: () {
+  //       // TODO: Implement Google sign in
+  //     },
+  //     icon: const FaIcon(FontAwesomeIcons.google, size: 20),
+  //     label: const Text('Continue with Google'),
+  //     style: ElevatedButton.styleFrom(
+  //       backgroundColor: Theme.of(context).colorScheme.surface,
+  //       foregroundColor: Theme.of(context).colorScheme.onSurface,
+  //       minimumSize: const Size(230, 44),
+  //       side:
+  //           BorderSide(color: Theme.of(context).colorScheme.outline, width: 2),
+  //       shape: RoundedRectangleBorder(
+  //         borderRadius: BorderRadius.circular(40),
+  //       ),
+  //     ),
+  //   );
+  // }
+
+ Widget _buildSignUpText(BuildContext context) {
+  return Align(
+    alignment: Alignment.center,
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Expanded(child: Divider()),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Text(
-            'Or sign in with',
-            style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                  color:
-                      Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
-          ),
-        ),
-        Expanded(child: Divider()),
-      ],
-    );
-  }
-
-  Widget _buildGoogleSignInButton(BuildContext context) {
-    return ElevatedButton.icon(
-      onPressed: () {
-        // TODO: Implement Google sign in
-      },
-      icon: const FaIcon(FontAwesomeIcons.google, size: 20),
-      label: const Text('Continue with Google'),
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        foregroundColor: Theme.of(context).colorScheme.onSurface,
-        minimumSize: const Size(230, 44),
-        side:
-            BorderSide(color: Theme.of(context).colorScheme.outline, width: 2),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(40),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSignUpText(BuildContext context) {
-    return Align(
-      alignment: Alignment.center,
-      child: RichText(
-        text: TextSpan(
+        Text(
+          'Don\'t have an account? ',
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: Theme.of(context).colorScheme.onSurface,
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
               ),
-          children: [
-            const TextSpan(text: 'Don\'t have an account? '),
-            TextSpan(
-              text: 'Sign Up here',
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.primary,
-                fontWeight: FontWeight.w600,
-              ),
-              // TODO: Add onTap functionality for sign up
-            ),
-          ],
         ),
-      ),
-    );
-  }
+        GestureDetector(
+          onTap: () {
+            Navigator.pushNamed(context, '/register');
+          },
+          child: Text(
+            'Sign Up here',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.primary,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
 }
