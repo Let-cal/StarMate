@@ -21,6 +21,7 @@ class LoginPageModel extends ChangeNotifier {
     return null;
   }
 
+  @override
   void dispose() {
     emailAddressTextController.dispose();
     passwordTextController.dispose();

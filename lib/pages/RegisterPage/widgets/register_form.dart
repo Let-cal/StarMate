@@ -1,18 +1,20 @@
 // widgets/register_form.dart
 import 'package:flutter/material.dart';
+
+import '../../../services/api_service.dart'; // Import the ApiService
 import '../register_page_model.dart';
-import 'custom_text_field.dart';
 import 'custom_button.dart';
+import 'custom_text_field.dart';
 
 class RegisterForm extends StatelessWidget {
   final RegisterPageModel model;
   final bool isKeyboardVisible;
 
   const RegisterForm({
-    Key? key,
+    super.key,
     required this.model,
     required this.isKeyboardVisible,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +77,7 @@ class RegisterForm extends StatelessWidget {
           labelText: 'Display Name',
           textCapitalization: TextCapitalization.words,
         ),
-         CustomTextField(
+        CustomTextField(
           controller: model.textController2,
           focusNode: model.textFieldFocusNode2,
           labelText: 'Telephone Number',
@@ -117,13 +119,56 @@ class RegisterForm extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
       child: CustomButton(
-        onPressed: () {
-          print('Button pressed ...');
+        onPressed: () async {
+          final apiService = ApiService();
+
+          // Fetch values from text controllers
+          final displayName = model.textController1?.text;
+          final telephoneNumber = model.textController2?.text;
+          final email = model.textController3?.text;
+          final password = model.textController4?.text;
+
+          // Check if any field is empty
+          if (displayName!.isEmpty ||
+              telephoneNumber!.isEmpty ||
+              email!.isEmpty ||
+              password!.isEmpty) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Please fill in all the fields.')),
+            );
+            return;
+          }
+
+          // Call the API
+          final response = await apiService.register(
+            email: email,
+            password: password,
+            fullName: displayName,
+            telephoneNumber: telephoneNumber,
+          );
+
+          if (response != null && response['success'] == true) {
+            // Show success message
+            // ignore: use_build_context_synchronously
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Registration successful!')),
+            );
+
+            // Navigate back to the login page
+            // ignore: use_build_context_synchronously
+            Navigator.pushReplacementNamed(context, '/');
+          } else {
+            // Handle failure, show error message from API
+            final errorMessage = response?['message'] ??
+                'Registration failed. Please try again.';
+            // ignore: use_build_context_synchronously
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(errorMessage)),
+            );
+          }
         },
         text: 'Create Account',
       ),
     );
   }
 }
-
-

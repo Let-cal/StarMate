@@ -1,23 +1,23 @@
-// register_page.dart
+// forgot_page.dart
 import 'package:flutter/material.dart';
-import 'widgets/register_form.dart';
-import 'register_page_model.dart';
+import 'widgets/forgot_form.dart';
+import 'forgot_page_model.dart';
 
-class RegisterPageWidget extends StatefulWidget {
-  const RegisterPageWidget({super.key});
+class ForgotPageWidget extends StatefulWidget {
+  const ForgotPageWidget({super.key});
 
   @override
-  State<RegisterPageWidget> createState() => _RegisterPageWidgetState();
+  State<ForgotPageWidget> createState() => _ForgotPageWidgetState();
 }
 
-class _RegisterPageWidgetState extends State<RegisterPageWidget> {
-  late RegisterPageModel _model;
+class _ForgotPageWidgetState extends State<ForgotPageWidget> {
+  late ForgotPageModel _model;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _model = RegisterPageModel();
+    _model = ForgotPageModel();
     _model.initControllers();
   }
 
@@ -50,7 +50,7 @@ class _RegisterPageWidgetState extends State<RegisterPageWidget> {
           elevation: 0,
         ),
         body: SafeArea(
-          child: RegisterForm(
+          child: ForgotForm(
             model: _model,
             isKeyboardVisible: isKeyboardVisible,
           ),

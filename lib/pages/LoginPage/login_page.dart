@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter/gestures.dart';
+
+import '../../services/api_service.dart'; // Import ApiService
 import 'login_page_model.dart';
 
 class LoginPageWidget extends StatefulWidget {
-  const LoginPageWidget({Key? key}) : super(key: key);
+  const LoginPageWidget({super.key});
 
   @override
   State<LoginPageWidget> createState() => _LoginPageWidgetState();
@@ -13,7 +13,7 @@ class LoginPageWidget extends StatefulWidget {
 
 class _LoginPageWidgetState extends State<LoginPageWidget> {
   late LoginPageModel _model;
-
+  final _apiService = ApiService(); // Initialize ApiService
   @override
   void initState() {
     super.initState();
@@ -33,7 +33,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: Scaffold(
-          backgroundColor: Theme.of(context).colorScheme.background,
+          backgroundColor: Theme.of(context).colorScheme.surface,
           body: SafeArea(
             child: SingleChildScrollView(
               child: Column(
@@ -146,7 +146,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
               const SizedBox(height: 24),
               // _buildDivider(),
               const SizedBox(height: 24),
-              // Center(child: _buildGoogleSignInButton(context)),
+              _buildForgotPassText(context),
               const SizedBox(height: 12),
               _buildSignUpText(context),
             ],
@@ -214,8 +214,33 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
     return Align(
       alignment: Alignment.center,
       child: ElevatedButton(
-        onPressed: () {
-          // TODO: Implement sign in logic
+        onPressed: () async {
+          if (_model.emailAddressTextController.text.isNotEmpty &&
+              _model.passwordTextController.text.isNotEmpty) {
+            // Call the login API
+            final response = await _apiService.login(
+              email: _model.emailAddressTextController.text,
+              password: _model.passwordTextController.text,
+            );
+
+            if (response != null && response['success'] == true) {
+              // Handle successful login (e.g., navigate to home screen)
+              Navigator.pushReplacementNamed(context, '/home');
+            } else {
+              // Display the message from response if available
+              final errorMessage = response?['message'] ?? 'Login failed';
+              print('Error: $errorMessage'); // Debug log to check the message
+
+              // Show error message in SnackBar
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(errorMessage)),
+              );
+            }
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Please fill out all fields')),
+            );
+          }
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: Theme.of(context).colorScheme.primary,
@@ -278,36 +303,68 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
   //     ),
   //   );
   // }
-
- Widget _buildSignUpText(BuildContext context) {
-  return Align(
-    alignment: Alignment.center,
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          'Don\'t have an account? ',
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurface,
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-              ),
-        ),
-        GestureDetector(
-          onTap: () {
-            Navigator.pushNamed(context, '/register');
-          },
-          child: Text(
-            'Sign Up here',
+  Widget _buildForgotPassText(BuildContext context) {
+    return Align(
+      alignment: Alignment.center,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            'Forgot your password? ',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.primary,
+                  color: Theme.of(context).colorScheme.onSurface,
                   fontSize: 14,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w500,
                 ),
           ),
-        ),
-      ],
-    ),
-  );
-}
+          GestureDetector(
+            onTap: () {
+              // TODO: Navigate to forgot password page
+              Navigator.pushNamed(context, '/forgot_pass');
+            },
+            child: Text(
+              'Reset here',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.primary,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSignUpText(BuildContext context) {
+    return Align(
+      alignment: Alignment.center,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            'Don\'t have an account? ',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.pushNamed(context, '/register');
+            },
+            child: Text(
+              'Sign Up here',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.primary,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }

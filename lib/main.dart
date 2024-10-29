@@ -3,6 +3,7 @@ import 'theme/theme.dart';
 import 'theme/util.dart';
 import './pages/LoginPage/login_page.dart';
 import './pages/RegisterPage/register_page_widget.dart';
+import './pages/ForgotPage/forgot_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const LoginPageWidget(),
         '/register': (context) => const RegisterPageWidget(),
+        '/forgot_pass': (context) => const ForgotPageWidget(),
       },
     );
   }
